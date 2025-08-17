@@ -92,7 +92,7 @@ const page = usePage()
         </Link>
 
         <!-- HASIL SUARA -->
-        <button
+       <button
           @click="hasilSuaraOpen = !hasilSuaraOpen"
           class="flex w-full items-center px-4 py-2 hover:bg-gray-700 focus:outline-none"
         >
@@ -110,6 +110,7 @@ const page = usePage()
             Rekap Suara
           </Link>
         </div>
+       
 
         <!-- MANAJEMEN PENGGUNA -->
         <Link

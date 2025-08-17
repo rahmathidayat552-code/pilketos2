@@ -9,6 +9,7 @@ use App\Http\Controllers\KandidatController;
 use App\Http\Controllers\PemilihController;
 use App\Models\Pemilih;
 use App\Http\Controllers\UserController;
+use App\Http\Controllers\HasilSuaraController;
 
 // admin login/logout
 Route::get('/admin/login', [AdminController::class, 'showLogin'])->name('admin.login');
@@ -40,6 +41,9 @@ Route::middleware('auth:admin')->group(function () {
     Route::post('/admin/pemilih/import', [PemilihController::class, 'import'])->name('pemilih.import');
     Route::get('/admin/pemilih/export', [PemilihController::class, 'export'])->name('pemilih.export');
     Route::resource('/admin/pemilih', PemilihController::class)->except(['show']);
+
+    // HASIL SUARA
+    Route::get('/admin/rekap', [HasilSuaraController::class, 'index'])->name('rekap.index');
 
     // user management
     Route::resource('/admin/users', UserController::class);
