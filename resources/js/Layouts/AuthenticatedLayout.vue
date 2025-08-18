@@ -23,7 +23,6 @@ const page = usePage()
 
 <template>
   <div class="flex h-screen bg-gray-100">
-    <!-- Sidebar -->
     <aside
       :class="[
         'bg-gray-900 text-white transition-all duration-300',
@@ -31,30 +30,40 @@ const page = usePage()
       ]"
     >
       <div class="flex items-center justify-between px-4 py-4">
-        <Link :href="route('admin.dashboard')">
-          <ApplicationLogo class="h-8 w-auto text-white" />
+        <Link :href="route('admin.dashboard')" class="flex items-center gap-2">
+            <template v-if="page.props.sekolah && page.props.sekolah.logo">
+                <img :src="`/storage/${page.props.sekolah.logo}`" alt="Logo Sekolah" class="h-8 w-8 object-cover rounded-full" />
+            </template>
+            <ApplicationLogo v-else class="h-8 w-auto text-white" />
+            <span v-if="sidebarOpen && page.props.sekolah"></span>
         </Link>
         <button
           @click="sidebarOpen = !sidebarOpen"
           class="text-gray-300 hover:text-white focus:outline-none"
         >
-          <span v-if="sidebarOpen">✖</span>
+          <span v-if="sidebarOpen">☰</span>
           <span v-else>☰</span>
         </button>
       </div>
 
       <nav class="mt-4 space-y-1">
-        <!-- Dashboard -->
         <Link
           :href="route('admin.dashboard')"
           class="flex items-center px-4 py-2 hover:bg-gray-700"
-          :class="{ 'bg-gray-800': route().current('dashboard') }"
+          :class="{ 'bg-gray-800': route().current('admin.dashboard') }"
         >
           <HomeIcon class="h-5 w-5" />
           <span v-if="sidebarOpen" class="ml-3">Dashboard</span>
         </Link>
-
-        <!-- DATA PEMILIH -->
+        <Link
+          :href="route('sekolah.index')"
+          class="flex items-center px-4 py-2 hover:bg-gray-700"
+          :class="{ 'bg-gray-800': route().current('sekolah.index') }"
+        >
+          <UsersIcon class="h-5 w-5" />
+          <span v-if="sidebarOpen" class="ml-3">Identitas Sekolah</span>
+        </Link>
+        
         <button
           @click="pemilihOpen = !pemilihOpen"
           class="flex w-full items-center px-4 py-2 hover:bg-gray-700 focus:outline-none"
@@ -81,7 +90,6 @@ const page = usePage()
           </Link>
         </div>
 
-        <!-- DATA KANDIDAT -->
         <Link
           :href="route('kandidat.index')"
           class="flex items-center px-4 py-2 hover:bg-gray-700"
@@ -91,8 +99,7 @@ const page = usePage()
           <span v-if="sidebarOpen" class="ml-3">Data Kandidat</span>
         </Link>
 
-        <!-- HASIL SUARA -->
-       <button
+        <button
           @click="hasilSuaraOpen = !hasilSuaraOpen"
           class="flex w-full items-center px-4 py-2 hover:bg-gray-700 focus:outline-none"
         >
@@ -110,9 +117,7 @@ const page = usePage()
             Rekap Suara
           </Link>
         </div>
-       
-
-        <!-- MANAJEMEN PENGGUNA -->
+        
         <Link
           :href="route('users.index')"
           class="flex items-center px-4 py-2 hover:bg-gray-700"
@@ -124,11 +129,13 @@ const page = usePage()
       </nav>
     </aside>
 
-    <!-- Main Content -->
     <div class="flex flex-1 flex-col">
-      <!-- Navbar -->
       <header class="flex items-center justify-between bg-white px-6 py-4 shadow">
-        <h1 class="text-lg font-bold">E-Pilketos SMKN 9 Bulukumba</h1>
+        <h1 class="text-lg font-bold" v-if="page.props.sekolah && page.props.sekolah.nama_sekolah">
+            PANEL ADMIN E-PILKETOS - {{ page.props.sekolah.nama_sekolah }}
+        </h1>
+        <h1 class="text-lg font-bold" v-else>E-Pilketos</h1>
+
         <form method="POST" :action="route('logout')">
           <input type="hidden" name="_token" :value="page.props.csrf_token" />
           <button type="submit" class="flex items-center text-red-600 hover:text-red-800">
@@ -138,7 +145,6 @@ const page = usePage()
         </form>
       </header>
 
-      <!-- Page content -->
       <main class="flex-1 overflow-y-auto p-6">
         <slot />
       </main>

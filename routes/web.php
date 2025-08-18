@@ -11,6 +11,7 @@ use App\Models\Pemilih;
 use App\Http\Controllers\UserController;
 use App\Http\Controllers\HasilSuaraController;
 use App\Http\Controllers\PublicController; // <-- Tambahkan baris ini
+use App\Http\Controllers\SekolahController;
 
 // admin login/logout
 Route::get('/admin/login', [AdminController::class, 'showLogin'])->name('admin.login');
@@ -56,6 +57,9 @@ Route::post('/vote', [PublicController::class, 'submitToken'])->name('public.sub
 Route::get('/pilih-kandidat', [PublicController::class, 'showPilihKandidat'])->name('public.pilih');
 Route::post('/pilih-kandidat', [PublicController::class, 'storeSuara'])->name('public.store-suara');
 
+// Route untuk data sekolah
+Route::get('/admin/sekolah', [SekolahController::class, 'index'])->name('sekolah.index');
+Route::post('/admin/sekolah/update', [SekolahController::class, 'update'])->name('sekolah.update');
 
 // default laravel
 Route::get('/dashboard', function () {

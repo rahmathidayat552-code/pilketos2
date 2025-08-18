@@ -11,8 +11,9 @@ return new class extends Migration
      */
     public function up(): void
     {
-        Schema::table('kandidat', function (Blueprint $table) {
-            $table->string('foto')->nullable()->change();
+        // Ubah kolom 'jenis' dari enum menjadi string
+        Schema::table('pemilih', function (Blueprint $table) {
+            $table->string('jenis')->change();
         });
     }
 
@@ -21,8 +22,9 @@ return new class extends Migration
      */
     public function down(): void
     {
-        Schema::table('kandidat', function (Blueprint $table) {
-            $table->string('foto')->nullable(false)->change();
+        // Kembalikan kolom 'jenis' menjadi enum
+        Schema::table('pemilih', function (Blueprint $table) {
+            $table->enum('jenis', ['siswa', 'guru'])->change();
         });
     }
 };

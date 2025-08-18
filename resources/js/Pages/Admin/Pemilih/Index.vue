@@ -35,7 +35,7 @@ const applyFilter = () => {
 const showModalAdd = ref(false)
 const formAdd = useForm({
   nama: '',
-  jenis: 'siswa',
+  jenis: '', // Ubah default menjadi string kosong
 })
 const submitAdd = () => {
   formAdd.post(route('pemilih.store'), {
@@ -51,7 +51,7 @@ const showModalEdit = ref(false)
 const formEdit = useForm({
   id: null,
   nama: '',
-  jenis: 'siswa',
+  jenis: '', // Ubah default menjadi string kosong
 })
 const openEdit = (item) => {
   formEdit.id = item.id
@@ -73,12 +73,19 @@ const destroy = (id) => {
     router.delete(route('pemilih.destroy', id))
   }
 }
+
+// Logika untuk nomor urut
+// Menghitung nomor urut berdasarkan halaman saat ini
+const calculateIndex = (index) => {
+    const page = props.pemilih.meta?.current_page || 1;
+    const perPage = props.pemilih.meta?.per_page || 15;
+    return (page - 1) * perPage + index + 1;
+};
 </script>
 
 <template>
   <AuthenticatedLayout>
     <div class="p-6 bg-white shadow rounded-lg">
-      <!-- Header -->
       <div class="flex justify-between items-center mb-6">
         <h2 class="text-xl font-bold text-gray-700">📋 Daftar Pemilih</h2>
         <div class="flex space-x-2">
@@ -88,6 +95,12 @@ const destroy = (id) => {
 >
   <ArrowDownTrayIcon class="w-5 h-5" /> Export
 </a>
+          <Link
+            :href="route('pemilih.import.form')"
+            class="flex items-center gap-1 px-4 py-2 bg-purple-600 text-white rounded-lg hover:bg-purple-700 transition"
+          >
+            <ArrowDownTrayIcon class="w-5 h-5" /> Import
+          </Link>
           <button
             @click="showModalAdd = true"
             class="flex items-center gap-1 px-4 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition"
@@ -97,7 +110,6 @@ const destroy = (id) => {
         </div>
       </div>
 
-      <!-- Filter -->
       <div class="flex justify-between items-center mb-4">
         <div class="relative w-1/3">
           <MagnifyingGlassIcon class="absolute left-2 top-2.5 h-5 w-5 text-gray-400" />
@@ -118,12 +130,11 @@ const destroy = (id) => {
         </select>
       </div>
 
-      <!-- Tabel -->
       <div class="overflow-x-auto">
         <table class="w-full border text-sm">
           <thead class="bg-gray-100 text-gray-700">
             <tr>
-              <th class="p-2 border">ID</th>
+              <th class="p-2 border">No.</th>
               <th class="p-2 border">Nama</th>
               <th class="p-2 border">Jenis</th>
               <th class="p-2 border">Token</th>
@@ -132,8 +143,8 @@ const destroy = (id) => {
             </tr>
           </thead>
           <tbody>
-            <tr v-for="item in pemilih.data || pemilih" :key="item.id" class="text-center hover:bg-gray-50">
-              <td class="p-2 border">{{ item.id }}</td>
+            <tr v-for="(item, index) in pemilih.data || pemilih" :key="item.id" class="text-center hover:bg-gray-50">
+              <td class="p-2 border">{{ calculateIndex(index) }}</td>
               <td class="p-2 border text-left">{{ item.nama }}</td>
               <td class="p-2 border capitalize">{{ item.jenis }}</td>
               <td class="p-2 border font-mono">{{ item.token }}</td>
@@ -161,7 +172,6 @@ const destroy = (id) => {
         </table>
       </div>
 
-      <!-- Pagination -->
       <div v-if="pemilih.links" class="mt-4 flex flex-wrap gap-2">
         <template v-for="link in pemilih.links" :key="link.label">
           <button
@@ -178,17 +188,15 @@ const destroy = (id) => {
       </div>
     </div>
 
-    <!-- Modal Tambah -->
     <div v-if="showModalAdd" class="fixed inset-0 flex items-center justify-center bg-black bg-opacity-50 z-50">
       <div class="bg-white rounded-lg p-6 w-1/3 shadow-lg">
         <h3 class="text-lg font-bold mb-4">Tambah Pemilih</h3>
         <form @submit.prevent="submitAdd" class="space-y-4">
           <input v-model="formAdd.nama" type="text" placeholder="Nama"
                  class="border p-2 rounded w-full" />
-          <select v-model="formAdd.jenis" class="border p-2 rounded w-full">
-            <option value="siswa">Siswa</option>
-            <option value="guru">Guru</option>
-          </select>
+          <input v-model="formAdd.jenis" type="text" placeholder="isi Kelas/Jabatan"
+                 class="border p-2 rounded w-full" />
+          
           <div class="flex justify-end space-x-2">
             <button type="button" @click="showModalAdd = false"
                     class="px-4 py-2 bg-gray-500 text-white rounded">Batal</button>
@@ -199,17 +207,14 @@ const destroy = (id) => {
       </div>
     </div>
 
-    <!-- Modal Edit -->
     <div v-if="showModalEdit" class="fixed inset-0 flex items-center justify-center bg-black bg-opacity-50 z-50">
       <div class="bg-white rounded-lg p-6 w-1/3 shadow-lg">
         <h3 class="text-lg font-bold mb-4">Edit Pemilih</h3>
         <form @submit.prevent="submitEdit" class="space-y-4">
           <input v-model="formEdit.nama" type="text" placeholder="Nama"
                  class="border p-2 rounded w-full" />
-          <select v-model="formEdit.jenis" class="border p-2 rounded w-full">
-            <option value="siswa">Siswa</option>
-            <option value="guru">Guru</option>
-          </select>
+          <input v-model="formEdit.jenis" type="text" placeholder="isi Kelas/Jabatan"
+                 class="border p-2 rounded w-full" />
           <div class="flex justify-end space-x-2">
             <button type="button" @click="showModalEdit = false"
                     class="px-4 py-2 bg-gray-500 text-white rounded">Batal</button>

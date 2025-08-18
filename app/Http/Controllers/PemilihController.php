@@ -22,7 +22,7 @@ class PemilihController extends Controller
     {
         $data = $request->validate([
             'nama' => 'required|string|max:100',
-            'jenis' => 'required|in:siswa,guru',
+            'jenis' => 'required|string',
         ]);
 
         // generate token otomatis 5 huruf kapital
@@ -70,7 +70,7 @@ class PemilihController extends Controller
     {
         $data = $request->validate([
             'nama' => 'required|string|max:100',
-            'jenis' => 'required|in:siswa,guru',
+            'jenis' => 'required|string',
         ]);
 
         $pemilih->update($data);

@@ -5,16 +5,37 @@ namespace App\Exports;
 use App\Models\Pemilih;
 use Maatwebsite\Excel\Concerns\FromCollection;
 use Maatwebsite\Excel\Concerns\WithHeadings;
+use Illuminate\Support\Collection;
 
 class PemilihExport implements FromCollection, WithHeadings
 {
-    public function collection()
+    /**
+    * @return \Illuminate\Support\Collection
+    */
+    public function collection(): Collection
     {
-        return Pemilih::select('id', 'nama', 'jenis', 'token', 'sudah_memilih')->get();
+        return Pemilih::all()->map(function ($pemilih) {
+            return [
+                'id' => $pemilih->id,
+                'nama' => $pemilih->nama,
+                'jenis' => $pemilih->jenis,
+                'token' => $pemilih->token,
+                'sudah_memilih' => $pemilih->sudah_memilih ? 'Sudah Memilih' : 'Belum Memilih',
+            ];
+        });
     }
 
+    /**
+    * @return array
+    */
     public function headings(): array
     {
-        return ['ID', 'Nama', 'Jenis', 'Token', 'Sudah Memilih'];
+        return [
+            'ID',
+            'Nama',
+            'Jenis',
+            'Token',
+            'Status'
+        ];
     }
 }
