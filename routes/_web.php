@@ -10,7 +10,7 @@ use App\Http\Controllers\PemilihController;
 use App\Models\Pemilih;
 use App\Http\Controllers\UserController;
 use App\Http\Controllers\HasilSuaraController;
-use App\Http\Controllers\PublicController; // <-- Tambahkan baris ini
+use App\Http\Controllers\PublicController;
 
 // admin login/logout
 Route::get('/admin/login', [AdminController::class, 'showLogin'])->name('admin.login');
@@ -34,6 +34,7 @@ Route::middleware('auth:admin')->group(function () {
     })->name('admin.dashboard');
 
     // kandidat
+    // Route::resource('/admin/kandidat', KandidatController::class)->names('kandidat');
     Route::resource('/admin/kandidat', KandidatController::class)->except(['show']);
 
     // pemilih (tanpa show, biar tidak bentrok)
@@ -49,15 +50,26 @@ Route::middleware('auth:admin')->group(function () {
     Route::resource('/admin/users', UserController::class);
 });
 
+
+
+// default laravel
+// Route::get('/', function () {
+//    return Inertia::render('Welcome', [
+//        'canLogin' => Route::has('login'),
+//        'canRegister' => Route::has('register'),
+//        'laravelVersion' => Application::VERSION,
+//        'phpVersion' => PHP_VERSION,
+//    ]);
+// });
+
 //PUBLIC
 // Halaman Public untuk pemilihan
 Route::get('/', [PublicController::class, 'showInputToken'])->name('public.home');
+Route::get('/vote', [PublicController::class, 'showInputToken'])->name('public.home');
 Route::post('/vote', [PublicController::class, 'submitToken'])->name('public.submit');
 Route::get('/pilih-kandidat', [PublicController::class, 'showPilihKandidat'])->name('public.pilih');
 Route::post('/pilih-kandidat', [PublicController::class, 'storeSuara'])->name('public.store-suara');
 
-
-// default laravel
 Route::get('/dashboard', function () {
     return Inertia::render('Dashboard');
 })->middleware(['auth', 'verified'])->name('dashboard');
