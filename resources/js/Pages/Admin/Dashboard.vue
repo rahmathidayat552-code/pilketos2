@@ -13,7 +13,7 @@ defineProps({
   <AuthenticatedLayout>
     <Head title="Dashboard" />
 
-    <h1 class="text-2xl font-bold mb-6">E-Pilketos SMKN 9 Bulukumba</h1>
+    <h1 class="text-2xl font-bold mb-6">E-Pilketos</h1>
 
     <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
       <div class="bg-white p-6 rounded shadow text-center">
