@@ -10,7 +10,7 @@ use App\Http\Controllers\PemilihController;
 use App\Models\Pemilih;
 use App\Http\Controllers\UserController;
 use App\Http\Controllers\HasilSuaraController;
-use App\Http\Controllers\PublicController; // <-- Tambahkan baris ini
+use App\Http\Controllers\PublicController;
 use App\Http\Controllers\SekolahController;
 
 // admin login/logout
@@ -18,7 +18,7 @@ Route::get('/admin/login', [AdminController::class, 'showLogin'])->name('admin.l
 Route::post('/admin/login', [AdminController::class, 'login']);
 Route::post('/admin/logout', [AdminController::class, 'logout'])->name('admin.logout');
 
-// admin area
+// admin area (Semua rute di sini hanya bisa diakses oleh admin)
 Route::middleware('auth:admin')->group(function () {
 
     // dashboard
@@ -37,7 +37,7 @@ Route::middleware('auth:admin')->group(function () {
     // kandidat
     Route::resource('/admin/kandidat', KandidatController::class)->except(['show']);
 
-    // pemilih (tanpa show, biar tidak bentrok)
+    // pemilih
     Route::get('/admin/pemilih/import', [PemilihController::class, 'importForm'])->name('pemilih.import.form');
     Route::post('/admin/pemilih/import', [PemilihController::class, 'import'])->name('pemilih.import');
     Route::get('/admin/pemilih/export', [PemilihController::class, 'export'])->name('pemilih.export');
@@ -45,9 +45,13 @@ Route::middleware('auth:admin')->group(function () {
 
     // HASIL SUARA
     Route::get('/admin/rekap', [HasilSuaraController::class, 'index'])->name('rekap.index');
-
-    // user management
+   
+    // manajemen pengguna
     Route::resource('/admin/users', UserController::class);
+
+    // Identitas Sekolah
+    Route::get('/admin/sekolah', [SekolahController::class, 'index'])->name('sekolah.index');
+    Route::post('/admin/sekolah/update', [SekolahController::class, 'update'])->name('sekolah.update');
 });
 
 //PUBLIC
@@ -57,9 +61,6 @@ Route::post('/vote', [PublicController::class, 'submitToken'])->name('public.sub
 Route::get('/pilih-kandidat', [PublicController::class, 'showPilihKandidat'])->name('public.pilih');
 Route::post('/pilih-kandidat', [PublicController::class, 'storeSuara'])->name('public.store-suara');
 
-// Route untuk data sekolah
-Route::get('/admin/sekolah', [SekolahController::class, 'index'])->name('sekolah.index');
-Route::post('/admin/sekolah/update', [SekolahController::class, 'update'])->name('sekolah.update');
 
 // default laravel
 Route::get('/dashboard', function () {

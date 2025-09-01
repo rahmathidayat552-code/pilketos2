@@ -136,13 +136,10 @@ const page = usePage()
         </h1>
         <h1 class="text-lg font-bold" v-else>E-Pilketos</h1>
 
-        <form method="POST" :action="route('admin.logout')">
-          <input type="hidden" name="_token" :value="page.props.csrf_token" />
-          <button type="submit" class="flex items-center text-red-600 hover:text-red-800">
-            <ArrowLeftOnRectangleIcon class="h-5 w-5 mr-1" />
-            Logout
-          </button>
-        </form>
+        <Link :href="route('admin.logout')" method="post" as="button" class="flex items-center text-red-600 hover:text-red-800">
+  <ArrowLeftOnRectangleIcon class="h-5 w-5 mr-1" />
+  Logout
+</Link>
       </header>
 
       <main class="flex-1 overflow-y-auto p-6">
